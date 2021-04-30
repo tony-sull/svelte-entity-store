@@ -11,6 +11,7 @@ export type ID = string | number
 export type GetID<T> = (t: T) => ID
 
 export type EntityStore<T> = {
+    reset(): void
     subscribe: Subscribe<Normalized<T>>
 }
 
@@ -19,7 +20,10 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
 
     const store = writable(normalizeT(initial))
 
+    const reset = () => store.set(normalizeT([]))
+
     return {
+        reset,
         subscribe: store.subscribe,
     }
 }

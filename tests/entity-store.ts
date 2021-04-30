@@ -1,7 +1,8 @@
 import { get } from 'svelte/store'
-import { test } from 'uvu'
+import { suite } from 'uvu'
 import * as assert from 'uvu/assert'
 import { EntityStore, entityStore } from '../src/entity-store'
+import { Normalized } from '../src/internal/normalize'
 
 type Entity = {
     id: string
@@ -11,18 +12,22 @@ type Entity = {
 
 const getID = (e: Entity) => e.id
 
-test('is a function', () => {
+// ---
+
+const constructor = suite('constructor')
+
+constructor('is a function', () => {
     assert.type(entityStore, 'function')
 })
 
-test('returns a subscriber function', () => {
+constructor('returns a subscriber function', () => {
     const store = entityStore<Entity>(getID)
 
     assert.type(store, 'object')
     assert.type(store.subscribe, 'function')
 })
 
-test("doesn't require initial state", () => {
+constructor("doesn't require initial state", () => {
     const store = entityStore<Entity>(getID)
     const state = get(store)
 
@@ -32,7 +37,7 @@ test("doesn't require initial state", () => {
     })
 })
 
-test('normalizes initial items array', () => {
+constructor('normalizes initial items array', () => {
     const items: Entity[] = [
         { id: 'abc', description: 'item 1', completed: false },
         { id: 'def', description: 'item 2', completed: true },
@@ -49,4 +54,50 @@ test('normalizes initial items array', () => {
     })
 })
 
-test.run()
+constructor.run()
+
+// ---
+
+const reset = suite('reset')
+
+reset('is a function', () => {
+    const { reset } = entityStore<Entity>(getID)
+    assert.type(reset, 'function')
+})
+
+reset('noop for an empty store', () => {
+    const store = entityStore<Entity>(getID)
+    store.reset()
+
+    const state = get(store)
+
+    assert.equal(state, { byId: {}, allIds: [] })
+})
+
+reset('removes all existing entities', () => {
+    const items: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+    ]
+    const store = entityStore<Entity>(getID, items)
+    store.reset()
+
+    const state = get(store)
+
+    assert.equal(state, { byId: {}, allIds: [] })
+})
+
+reset("doesn't trigger subscribers for empty store", () => {
+    const store = entityStore<Entity>(getID)
+
+    let states: Normalized<Entity>[]
+    const unsubscribe = store.subscribe((state) => states.push(state))
+
+    store.reset()
+
+    assert.is(states.length, 1)
+
+    unsubscribe()
+})
+
+// ---
