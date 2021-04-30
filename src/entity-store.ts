@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store'
 import { normalize } from './internal/normalize'
+import { setEntities } from './internal/set-entities'
 import type { Subscriber, Unsubscriber } from 'svelte/store'
 import type { Normalized } from './internal/normalize'
 
@@ -24,6 +25,21 @@ export type EntityStore<T> = {
      * Removes all entities
      */
     reset(): void
+
+    /**
+     * Adds the given entity to the store. If the entity is already in the store, their old value is replaced.
+     *
+     * @param entity Entity to be added or updated
+     */
+    set(entity: T): void
+
+    /**
+     * Adds the given entities to the store. For entities that are already in the store, their old value is replaced.
+     *
+     * @param entities Entity or entities to be added or updated
+     */
+    set(entities: T | T[]): void
+
     /**
      * See (Svelte's docs)[https://svelte.dev/docs#svelte_store] for details on the Store contract and `subscribe` function
      */
@@ -40,13 +56,23 @@ export type EntityStore<T> = {
  */
 export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<T> {
     const normalizeT = normalize(getID)
+    const setEntitiesT = setEntities(getID)
 
     const store = writable(normalizeT(initial))
 
     const reset = () => store.set(normalizeT([]))
 
+    const set = (entities: T | T[]) => {
+        const toAdd = [].concat(entities)
+
+        if (toAdd.length > 0) {
+            store.update(setEntitiesT(toAdd))
+        }
+    }
+
     return {
         reset,
+        set,
         subscribe: store.subscribe,
     }
 }
