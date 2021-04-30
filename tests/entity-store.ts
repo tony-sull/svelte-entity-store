@@ -42,7 +42,7 @@ constructor('normalizes initial items array', () => {
         { id: 'abc', description: 'item 1', completed: false },
         { id: 'def', description: 'item 2', completed: true },
     ]
-    const store = entityStore<EntityStore>(getID, items)
+    const store = entityStore<Entity>(getID, items)
     const state = get(store)
 
     assert.equal(state, {
