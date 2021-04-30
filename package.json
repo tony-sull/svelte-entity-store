@@ -1,0 +1,50 @@
+{
+  "name": "svelte-entity-store",
+  "version": "1.0.0",
+  "description": "Normalized entity store for Svelte projects",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "lint": "eslint src/ --ext .ts",
+    "build-declarations": "tsc -d && node scripts/move-type-declarations.js",
+    "build": "npm run build-declarations && rollup -c",
+    "dev": "rollup -cw",
+    "test": "uvu -r ts-node/register tests",
+    "test:coverage": "c8 --include=src npm test",
+    "test:report": "c8 report --reporter=text-lcov > coverage.lcov",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonyfsullivan/svelte-entity-store.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tonyfsullivan/svelte-entity-store/issues"
+  },
+  "homepage": "https://github.com/tonyfsullivan/svelte-entity-store#readme",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "c8": "^7.7.1",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1",
+    "rollup": "^2.46.0",
+    "rollup-plugin-sucrase": "^2.1.0",
+    "sander": "^0.6.0",
+    "svelte": "^3.37.0",
+    "tiny-glob": "^0.2.8",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4",
+    "uvu": "^0.5.1"
+  },
+  "dependencies": {}
+}
