@@ -52,7 +52,7 @@ test('accepts an array of IDs', () => {
 test('accepts a filter function', () => {
     const state: Normalized<Entity> = {
         byId: {
-            abc: { id: 'abc', description: 'item 1', completed: false },
+            abc: { id: 'abc', description: 'item 1', completed: true },
             def: { id: 'def', description: 'item 2', completed: false },
             ghi: { id: 'ghi', description: 'item 3', completed: true },
         },
