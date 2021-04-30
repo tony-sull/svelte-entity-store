@@ -58,7 +58,7 @@ test('accepts a filter function', () => {
         },
         allIds: ['abc', 'def', 'ghi'],
     }
-    const result = removeEntitiesT(['abc', 'ghi'])(state)
+    const result = removeEntitiesT(isCompleted)(state)
 
     assert.equal(result, {
         byId: {
