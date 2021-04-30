@@ -16,6 +16,12 @@ export type Predicate<T> = (t: T) => boolean
  */
 export type ID = string | number
 
+export function isID(value: unknown): value is ID {
+    const type = typeof value
+
+    return type === 'string' || type === 'number'
+}
+
 /**
  * Function used to get the unique ID of an entity
  */
