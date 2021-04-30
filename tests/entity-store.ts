@@ -12,6 +12,7 @@ type Entity = {
 
 const getID = (e: Entity) => e.id
 const isCompleted = (e: Entity) => e.completed
+const toggle = (e: Entity) => ({ ...e, completed: !e.completed })
 
 // ---
 
@@ -481,5 +482,161 @@ remove('updates subscribers once', () => {
 })
 
 remove.run()
+
+// ---
+
+const update = suite('update')
+
+update('is a function', () => {
+    const { update } = entityStore<Entity>(getID)
+    assert.type(update, 'function')
+})
+
+update('accepts a single ID', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.update(toggle, 'abc')
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: true },
+            def: entities[1],
+            ghi: entities[2],
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
+update('accepts a single entity', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.update(toggle, entities[0])
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: true },
+            def: entities[1],
+            ghi: entities[2],
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
+update('accepts an array of IDs', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.update(toggle, ['abc', 'ghi'])
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: true },
+            def: entities[1],
+            ghi: { id: 'ghi', description: 'item 3', completed: true },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
+update('accepts an array of entities', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.update(toggle, [entities[0], entities[2]])
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: true },
+            def: entities[1],
+            ghi: { id: 'ghi', description: 'item 3', completed: true },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
+update('accepts a filter function', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: true },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.update(toggle, isCompleted)
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            abc: entities[0],
+            def: { id: 'def', description: 'item 2', completed: false },
+            ghi: { id: 'ghi', description: 'item 3', completed: false },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
+update('updates subscribers once', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: true },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    const states: Normalized<Entity>[] = []
+    const unsubscribe = store.subscribe((state) => states.push(state))
+
+    store.update(toggle, isCompleted)
+
+    assert.equal(states, [
+        {
+            byId: {
+                abc: entities[0],
+                def: entities[1],
+                ghi: entities[2],
+            },
+            allIds: ['abc', 'def', 'ghi'],
+        },
+        {
+            byId: {
+                abc: entities[0],
+                def: { id: 'def', description: 'item 2', completed: false },
+                ghi: { id: 'ghi', description: 'item 3', completed: false },
+            },
+            allIds: ['abc', 'def', 'ghi'],
+        },
+    ])
+
+    unsubscribe()
+})
+
+update.run()
 
 // ---

@@ -1,8 +1,9 @@
-import { derived, writable } from 'svelte/store'
+import { derived, Updater, writable } from 'svelte/store'
 import { getEntities } from './internal/get-entities'
 import { normalize } from './internal/normalize'
 import { removeEntities } from './internal/remove-entities'
 import { setEntities } from './internal/set-entities'
+import { updateEntities } from './internal/update-entities'
 import type { Readable, Subscriber, Unsubscriber } from 'svelte/store'
 import type { Normalized } from './internal/normalize'
 
@@ -101,6 +102,46 @@ export type EntityStore<T> = {
      * See (Svelte's docs)[https://svelte.dev/docs#svelte_store] for details on the Store contract and `subscribe` function
      */
     subscribe: Subscribe<Normalized<T>>
+
+    /**
+     * If found, runs the entity through the updater function and stores the new state
+     *
+     * @param updater {@link Updater<T>} Callback to update the entity
+     * @param id {@link ID} of the entity to update
+     */
+    update(updater: Updater<T>, id: ID): void
+
+    /**
+     * Runs the matching entity through the updater function and stores the new state
+     *
+     * @param updater {@link Updater<T>} Callback to update each entity
+     * @param ids {@link ID}s of the entities to update
+     */
+    update(updater: Updater<T>, ids: ID[]): void
+
+    /**
+     * If found, runs the entity through the updater function and stores the new state
+     *
+     * @param updater {@link Updater<T>} Callback to update the entity
+     * @param entity The entity to update
+     */
+    update(updater: Updater<T>, entity: T): void
+
+    /**
+     * Runs each existing entity through the updater function and stores the new state
+     *
+     * @param updater {@link Updater<T>} Callback to update each entity
+     * @param entities Array of the entities to update
+     */
+    update(updater: Updater<T>, entities: T[]): void
+
+    /**
+     * Runs each matching entity through the updater function and stores the new state
+     *
+     * @param updater {@link Updater<T>} Callback to update each entity
+     * @param pred {@link Predicate<T>} filter function that returns true for each entity to update
+     */
+    update(updater: Updater<T>, pred: Predicate<T>): void
 }
 
 /**
@@ -115,6 +156,7 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
     const normalizeT = normalize(getID)
     const removeEntitiesT = removeEntities(getID)
     const setEntitiesT = setEntities(getID)
+    const updateEntitiesT = updateEntities(getID)
 
     const store = writable(normalizeT(initial))
 
@@ -148,11 +190,21 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
         store.update(removeEntitiesT(input))
     }
 
+    function update(updater: Updater<T>, id: ID): void
+    function update(updater: Updater<T>, ids: ID[]): void
+    function update(updater: Updater<T>, entity: T): void
+    function update(updater: Updater<T>, entiites: T[]): void
+    function update(updater: Updater<T>, pred: Predicate<T>): void
+    function update(updater: Updater<T>, input: ID | ID[] | T | T[] | Predicate<T>): void {
+        store.update(updateEntitiesT(updater)(input))
+    }
+
     return {
         get,
         remove,
         reset,
         set,
         subscribe: store.subscribe,
+        update,
     }
 }
