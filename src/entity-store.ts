@@ -1,7 +1,8 @@
-import { writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
+import { getEntities } from './internal/get-entities'
 import { normalize } from './internal/normalize'
 import { setEntities } from './internal/set-entities'
-import type { Subscriber, Unsubscriber } from 'svelte/store'
+import type { Readable, Subscriber, Unsubscriber } from 'svelte/store'
 import type { Normalized } from './internal/normalize'
 
 declare type Invalidator<T> = (value?: T) => void
@@ -21,6 +22,23 @@ export type GetID<T> = (t: T) => ID
  * Simple Svelte store that normalized data by ID and provides helpers for common data access patterns.
  */
 export type EntityStore<T> = {
+    /**
+     * Gets a derived store containing the entity if the ID is found, or undefined otherwise.
+     *
+     @param id ID of the entity to find
+     * @returns Entity object if found, undefined otherwise
+     */
+    get(id: ID): Readable<T | undefined>
+
+    /**
+     * Gets a derived store containing a list of all entities found by ID.
+     * IDs that aren't found in the store are ignored. The list of entities is not guaranteed to be the same length as the list of IDs.
+     *
+     * @param ids Array of IDs to find
+     * @returns Array of found entities
+     */
+    get(ids: ID[]): Readable<T[]>
+
     /**
      * Removes all entities
      */
@@ -70,7 +88,14 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
         }
     }
 
+    function get(id: ID): Readable<T | undefined>
+    function get(ids: ID[]): Readable<T[]>
+    function get(ids: ID | ID[]): Readable<T | undefined> | Readable<T[]> {
+        return Array.isArray(ids) ? derived(store, getEntities<T>(ids)) : derived(store, getEntities<T>(ids))
+    }
+
     return {
+        get,
         reset,
         set,
         subscribe: store.subscribe,

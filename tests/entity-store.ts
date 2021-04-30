@@ -1,4 +1,4 @@
-import { get } from 'svelte/store'
+import { get as svelteGet } from 'svelte/store'
 import { suite } from 'uvu'
 import * as assert from 'uvu/assert'
 import { entityStore } from '../src/entity-store'
@@ -29,7 +29,7 @@ constructor('returns a subscriber function', () => {
 
 constructor("doesn't require initial state", () => {
     const store = entityStore<Entity>(getID)
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, {
         byId: {},
@@ -43,7 +43,7 @@ constructor('normalizes initial items array', () => {
         { id: 'def', description: 'item 2', completed: true },
     ]
     const store = entityStore<Entity>(getID, items)
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, {
         byId: {
@@ -69,7 +69,7 @@ reset('noop for an empty store', () => {
     const store = entityStore<Entity>(getID)
     store.reset()
 
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, { byId: {}, allIds: [] })
 })
@@ -82,7 +82,7 @@ reset('removes all existing entities', () => {
     const store = entityStore<Entity>(getID, items)
     store.reset()
 
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, { byId: {}, allIds: [] })
 })
@@ -115,7 +115,7 @@ set('accepts a single entity', () => {
 
     store.set(entity)
 
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, {
         byId: {
@@ -134,7 +134,7 @@ set('accepts an array of entities', () => {
 
     store.set(entities)
 
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, {
         byId: {
@@ -154,7 +154,7 @@ set('updates an existing entity', () => {
 
     store.set({ ...entities[0], completed: true })
 
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, {
         byId: {
@@ -179,7 +179,7 @@ set('handles a combination of new and existing entities', () => {
 
     store.set(input)
 
-    const state = get(store)
+    const state = svelteGet(store)
 
     assert.equal(state, {
         byId: {
@@ -256,4 +256,93 @@ set("doesn't call subscribers if an empty array was provided", () => {
 
 set.run()
 
-// --
+// ---
+
+const get = suite('get')
+
+get('is a function', () => {
+    const { get } = entityStore<Entity>(getID)
+    assert.type(get, 'function')
+})
+
+get('accepts a single ID', () => {
+    const { get } = entityStore<Entity>(getID)
+    const $entity = get('abc')
+
+    const state = svelteGet($entity)
+
+    assert.type($entity.subscribe, 'function')
+    assert.type(state, 'undefined')
+})
+
+get('accepts an array of IDs', () => {
+    const { get } = entityStore<Entity>(getID)
+    const $entities = get(['abc', 'def'])
+
+    const state = svelteGet($entities)
+
+    assert.type($entities.subscribe, 'function')
+    assert.ok(Array.isArray(state))
+})
+
+get('returns a known entity by ID', () => {
+    const entity: Entity = { id: 'abc', description: 'item 1', completed: false }
+    const { get } = entityStore<Entity>(getID, [entity])
+
+    const $entity = get(entity.id)
+    const state = svelteGet($entity)
+
+    assert.equal(state, entity)
+})
+
+get('returns all known entities for given IDs', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const { get } = entityStore<Entity>(getID, entities)
+
+    const $entities = get(['abc', 'ghi'])
+    const state = svelteGet($entities)
+
+    assert.equal(state, [entities[0], entities[2]])
+})
+
+get('ignores unknown IDs', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const { get } = entityStore<Entity>(getID, entities)
+
+    const $entities = get(['abc', 'jkl', 'ghi'])
+    const state = svelteGet($entities)
+
+    assert.equal(state, [entities[0], entities[2]])
+})
+
+get('updates subscribers when entity is removed', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    const $entity = store.get('abc')
+
+    const states: Array<Entity | undefined> = []
+    const unsubscribe = $entity.subscribe((state) => states.push(state))
+
+    store.reset()
+
+    assert.equal(states, [entities[0], undefined])
+
+    unsubscribe()
+})
+
+get.run()
+
+// ---
