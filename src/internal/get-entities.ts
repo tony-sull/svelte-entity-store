@@ -1,5 +1,5 @@
 import type { Normalized } from './normalize'
-import type { ID } from '..'
+import type { ID, Predicate } from '..'
 
 /**
  * Finds an entity by ID
@@ -17,12 +17,22 @@ export function getEntities<T>(id: ID): (state: Normalized<T>) => T | undefined
  * @returns Array of found entities
  */
 export function getEntities<T>(ids: ID[]): (state: Normalized<T>) => T[]
-export function getEntities<T>(ids: ID | ID[]) {
+
+/**
+ * Finds all entities that match the filter function.
+ *
+ * @param pred {@link Predicate<T>} filter function
+ * @returns Array of entities matching the filter function
+ */
+export function getEntities<T>(pred: Predicate<T>): (state: Normalized<T>) => T[]
+export function getEntities<T>(input: ID | ID[] | Predicate<T>) {
     return function (state: Normalized<T>): T | T[] {
-        if (Array.isArray(ids)) {
-            return ids.map((id) => state.byId[id]).filter(Boolean)
+        if (Array.isArray(input)) {
+            return input.map((id) => state.byId[id]).filter(Boolean)
+        } else if (input instanceof Function) {
+            return state.allIds.map((id) => state.byId[id]).filter(input)
         } else {
-            return state.byId[ids]
+            return state.byId[input]
         }
     }
 }

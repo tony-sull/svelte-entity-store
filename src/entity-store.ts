@@ -8,6 +8,8 @@ import type { Normalized } from './internal/normalize'
 declare type Invalidator<T> = (value?: T) => void
 declare type Subscribe<T> = (this: void, run: Subscriber<T>, invalidate?: Invalidator<T>) => Unsubscriber
 
+export type Predicate<T> = (t: T) => boolean
+
 /**
  * EntityStore supports `string` and `number` values for unique IDs
  */
@@ -38,6 +40,15 @@ export type EntityStore<T> = {
      * @returns Array of found entities
      */
     get(ids: ID[]): Readable<T[]>
+
+    /**
+     * Gets a derived store containing a list of all entities in the store that match
+     * the filter function.
+     *
+     * @param pred {@link Predicate<T>} filter function
+     * @returns Array of all entities matching the filter function
+     */
+    get(pred: Predicate<T>): Readable<T[]>
 
     /**
      * Removes all entities
@@ -90,8 +101,15 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
 
     function get(id: ID): Readable<T | undefined>
     function get(ids: ID[]): Readable<T[]>
-    function get(ids: ID | ID[]): Readable<T | undefined> | Readable<T[]> {
-        return Array.isArray(ids) ? derived(store, getEntities<T>(ids)) : derived(store, getEntities<T>(ids))
+    function get(pred: Predicate<T>): Readable<T[]>
+    function get(input: ID | ID[] | Predicate<T>): Readable<T | undefined> | Readable<T[]> {
+        if (Array.isArray(input)) {
+            return derived(store, getEntities<T>(input))
+        } else if (input instanceof Function) {
+            return derived(store, getEntities<T>(input))
+        } else {
+            return derived(store, getEntities<T>(input))
+        }
     }
 
     return {

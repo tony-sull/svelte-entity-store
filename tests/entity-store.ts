@@ -11,6 +11,7 @@ type Entity = {
 }
 
 const getID = (e: Entity) => e.id
+const isCompleted = (e: Entity) => e.completed
 
 // ---
 
@@ -285,6 +286,16 @@ get('accepts an array of IDs', () => {
     assert.ok(Array.isArray(state))
 })
 
+get('accepts a filter function', () => {
+    const { get } = entityStore<Entity>(getID)
+    const $entities = get(isCompleted)
+
+    const state = svelteGet($entities)
+
+    assert.type($entities.subscribe, 'function')
+    assert.ok(Array.isArray(state))
+})
+
 get('returns a known entity by ID', () => {
     const entity: Entity = { id: 'abc', description: 'item 1', completed: false }
     const { get } = entityStore<Entity>(getID, [entity])
@@ -321,6 +332,34 @@ get('ignores unknown IDs', () => {
     const state = svelteGet($entities)
 
     assert.equal(state, [entities[0], entities[2]])
+})
+
+get('returns all entities matching the filter', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const { get } = entityStore<Entity>(getID, entities)
+
+    const $entities = get(isCompleted)
+    const state = svelteGet($entities)
+
+    assert.equal(state, [entities[1]])
+})
+
+get('returns an empty array if no entities match the filter', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const { get } = entityStore<Entity>(getID, entities)
+
+    const $entities = get(isCompleted)
+    const state = svelteGet($entities)
+
+    assert.equal(state, [])
 })
 
 get('updates subscribers when entity is removed', () => {
