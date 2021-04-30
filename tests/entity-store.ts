@@ -385,3 +385,101 @@ get('updates subscribers when entity is removed', () => {
 get.run()
 
 // ---
+
+const remove = suite('remove')
+
+remove('is a function', () => {
+    const { remove } = entityStore<Entity>(getID)
+    assert.type(remove, 'function')
+})
+
+remove('accepts a single ID', () => {
+    const entity: Entity = { id: 'abc', description: 'item 1', completed: false }
+    const store = entityStore<Entity>(getID, [entity])
+
+    store.remove('abc')
+
+    const state = svelteGet(store)
+
+    assert.equal(state, { byId: {}, allIds: [] })
+})
+
+remove('accepts an array of IDs', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.remove(['abc'])
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            def: entities[1],
+            ghi: entities[2],
+        },
+        allIds: ['def', 'ghi'],
+    })
+})
+
+remove('accepts a filter function', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: true },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.remove(isCompleted)
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            def: entities[1],
+            ghi: entities[2],
+        },
+        allIds: ['def', 'ghi'],
+    })
+})
+
+remove('updates subscribers once', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: true },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    const states: Normalized<Entity>[] = []
+    const unsubscribe = store.subscribe((state) => states.push(state))
+
+    store.remove(isCompleted)
+
+    assert.equal(states, [
+        {
+            byId: {
+                abc: entities[0],
+                def: entities[1],
+                ghi: entities[2],
+            },
+            allIds: ['abc', 'def', 'ghi'],
+        },
+        {
+            byId: {
+                def: entities[1],
+                ghi: entities[2],
+            },
+            allIds: ['def', 'ghi'],
+        },
+    ])
+
+    unsubscribe()
+})
+
+remove.run()
+
+// ---

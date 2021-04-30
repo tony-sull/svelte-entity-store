@@ -1,6 +1,7 @@
 import { derived, writable } from 'svelte/store'
 import { getEntities } from './internal/get-entities'
 import { normalize } from './internal/normalize'
+import { removeEntities } from './internal/remove-entities'
 import { setEntities } from './internal/set-entities'
 import type { Readable, Subscriber, Unsubscriber } from 'svelte/store'
 import type { Normalized } from './internal/normalize'
@@ -51,6 +52,27 @@ export type EntityStore<T> = {
     get(pred: Predicate<T>): Readable<T[]>
 
     /**
+     * Removes the entity from the store, if found
+     *
+     * @param id {ID} ID of the entity to remove
+     */
+    remove(id: ID): void
+
+    /**
+     * Removes the given entities from the store, if found
+     *
+     * @param ids Array of {@link ID}s to remove from the store
+     */
+    remove(ids: ID[]): void
+
+    /**
+     * Removes all entities that match the filter function
+     *
+     * @param pred {@link Predicate<T>} filter function which returns true for each entity to be removed
+     */
+    remove(pred: Predicate<T>): void
+
+    /**
      * Removes all entities
      */
     reset(): void
@@ -85,6 +107,7 @@ export type EntityStore<T> = {
  */
 export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<T> {
     const normalizeT = normalize(getID)
+    const removeEntitiesT = removeEntities(getID)
     const setEntitiesT = setEntities(getID)
 
     const store = writable(normalizeT(initial))
@@ -112,8 +135,16 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
         }
     }
 
+    function remove(id: ID): void
+    function remove(ids: ID[]): void
+    function remove(pred: Predicate<T>): void
+    function remove(input: ID | ID[] | Predicate<T>): void {
+        store.update(removeEntitiesT(input))
+    }
+
     return {
         get,
+        remove,
         reset,
         set,
         subscribe: store.subscribe,
