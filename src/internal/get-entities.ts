@@ -26,7 +26,7 @@ export function getEntities<T>(ids: ID[]): (state: Normalized<T>) => T[]
 /**
  * Finds all entities that match the filter function.
  *
- * @param pred {@link Predicate<T>} filter function
+ * @param pred Filter function
  * @returns Array of entities matching the filter function
  */
 export function getEntities<T>(pred: Predicate<T>): (state: Normalized<T>) => T[]

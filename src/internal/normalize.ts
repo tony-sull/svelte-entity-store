@@ -21,8 +21,8 @@ export type Normalized<T> = {
  * Takes a list of elements and normalizes them by ID
  *
  * @typeParam T Entity type being stored
- * @param getID {@link GetID<T>}
- * @returns {@link Normalized<T>} noramlized state holding the given items
+ * @param getID Function that returns the ID of an entity
+ * @returns Noramlized state holding the given items
  */
 export const normalize = <T>(getID: GetID<T>) => (items: T[]): Normalized<T> => {
     return items.reduce(

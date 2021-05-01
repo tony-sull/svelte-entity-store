@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "doc": "typedoc --entryPoints src/index.ts",
+    "doc": "typedoc",
     "lint": "eslint src/ --ext .ts",
     "build-declarations": "tsc -d && node scripts/move-type-declarations.js",
     "build": "npm run build-declarations && rollup -c",

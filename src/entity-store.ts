@@ -43,7 +43,7 @@ export type EntityStore<T> = {
      * Gets a derived store containing a list of all entities in the store that match
      * the filter function.
      *
-     * @param pred {@link Predicate<T>} filter function
+     * @param pred filter function
      * @returns Array of all entities matching the filter function
      */
     get(pred: Predicate<T>): Readable<T[]>
@@ -58,14 +58,14 @@ export type EntityStore<T> = {
     /**
      * Removes the given entities from the store, if found
      *
-     * @param ids Array of {@link ID}s to remove from the store
+     * @param ids Array of IDs to remove from the store
      */
     remove(ids: ID[]): void
 
     /**
      * Removes all entities that match the filter function
      *
-     * @param pred {@link Predicate<T>} filter function which returns true for each entity to be removed
+     * @param pred filter function which returns true for each entity to be removed
      */
     remove(pred: Predicate<T>): void
 
@@ -96,30 +96,30 @@ export type EntityStore<T> = {
     /**
      * Runs every entity through the updater function and stores the new state
      *
-     * @param updater {@link Updater<T>} Callback to update the entity
+     * @param updater Callback to update the entity
      */
     update(updater: Updater<T>): void
 
     /**
      * If found, runs the entity through the updater function and stores the new state
      *
-     * @param updater {@link Updater<T>} Callback to update the entity
-     * @param id {@link ID} of the entity to update
+     * @param updater Callback to update the entity
+     * @param id ID of the entity to update
      */
     update(updater: Updater<T>, id: ID): void
 
     /**
      * Runs the matching entity through the updater function and stores the new state
      *
-     * @param updater {@link Updater<T>} Callback to update each entity
-     * @param ids {@link ID}s of the entities to update
+     * @param updater Callback to update each entity
+     * @param ids IDs of the entities to update
      */
     update(updater: Updater<T>, ids: ID[]): void
 
     /**
      * If found, runs the entity through the updater function and stores the new state
      *
-     * @param updater {@link Updater<T>} Callback to update the entity
+     * @param updater Callback to update the entity
      * @param entity The entity to update
      */
     update(updater: Updater<T>, entity: T): void
@@ -127,7 +127,7 @@ export type EntityStore<T> = {
     /**
      * Runs each existing entity through the updater function and stores the new state
      *
-     * @param updater {@link Updater<T>} Callback to update each entity
+     * @param updater Callback to update each entity
      * @param entities Array of the entities to update
      */
     update(updater: Updater<T>, entities: T[]): void
@@ -135,8 +135,8 @@ export type EntityStore<T> = {
     /**
      * Runs each matching entity through the updater function and stores the new state
      *
-     * @param updater {@link Updater<T>} Callback to update each entity
-     * @param pred {@link Predicate<T>} filter function that returns true for each entity to update
+     * @param updater Callback to update each entity
+     * @param pred Filter function that returns true for each entity to update
      */
     update(updater: Updater<T>, pred: Predicate<T>): void
 }
@@ -145,9 +145,8 @@ export type EntityStore<T> = {
  * Creates a new entity store
  *
  * @typeParam T Entity type being stored
- * @param getID {@link GetID<T>}
+ * @param getID Function that returns the ID of an entity
  * @param initial (optional) Initial array of items to be stored
- * @returns {@link EntityStore}
  */
 export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<T> {
     const normalizeT = normalize(getID)

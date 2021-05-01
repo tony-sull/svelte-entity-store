@@ -8,21 +8,21 @@ export function removeEntities<T>(
     /**
      * Removes an entity by ID, if found.
      *
-     * @param id {@link ID} ID of the entity to remove
+     * @param id ID of the entity to remove
      */
     function withInput(id: ID): (state: Normalized<T>) => Normalized<T>
 
     /**
      * Removes one or more entities from the state, if found.
      *
-     * @param ids Array of {@link ID}s to remove
+     * @param ids Array of IDs to remove
      */
     function withInput(ids: ID[]): (state: Normalized<T>) => Normalized<T>
 
     /**
      * Removes all entities that match the filter function.
      *
-     * @param pred {@link Predicate<T>} filter function that returns true for every entity that should be removed
+     * @param pred Filter function that returns true for every entity that should be removed
      */
     function withInput(pred: Predicate<T>): (state: Normalized<T>) => Normalized<T>
 
