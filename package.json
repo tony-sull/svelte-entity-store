@@ -15,6 +15,9 @@
     "entity",
     "reactive"
   ],
+  "engines": {
+    "node": ">= 10"
+  },
   "scripts": {
     "doc": "typedoc",
     "lint": "eslint src/ --ext .ts",
@@ -30,6 +33,7 @@
     "type": "git",
     "url": "git+https://github.com/tony-sull/svelte-entity-store.git"
   },
+  "author": "Tony Sullivan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tony-sull/svelte-entity-store/issues"
