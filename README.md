@@ -5,6 +5,9 @@
   <a href="https://github.com/lukeed/uvu/actions">
     <img src="https://github.com/lukeed/uvu/workflows/CI/badge.svg" alt="CI" />
   </a>
+  <a href="https://codecov.io/gh/tonyfsullivan/svelte-entity-store">
+    <img src="https://codecov.io/gh/tonyfsullivan/svelte-entity-store/branch/main/graph/badge.svg" alt="codecov">
+  </a>
 </div>
 
 # Svelte Entity Store
