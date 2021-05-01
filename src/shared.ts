@@ -7,7 +7,7 @@ export type ID = string | number
  * Type guard used to check if any value is a valid entity ID
  *
  * @param value {unknown}
- * @returns true if the value is an ID (string or number), false otherwise
+ * @returns {boolean} true if the value is an ID (string or number), false otherwise
  */
 export function isID(value: unknown): value is ID {
     const type = typeof value

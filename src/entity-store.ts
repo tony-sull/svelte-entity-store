@@ -25,7 +25,7 @@ export type EntityStore<T> = {
     /**
      * Gets a derived store containing the entity if the ID is found, or undefined otherwise.
      *
-     @param id ID of the entity to find
+     * @param id ID of the entity to find
      * @returns Entity object if found, undefined otherwise
      */
     get(id: ID): Readable<T | undefined>
@@ -43,34 +43,34 @@ export type EntityStore<T> = {
      * Gets a derived store containing a list of all entities in the store that match
      * the filter function.
      *
-     * @param pred filter function
+     * @param pred Filter function
      * @returns Array of all entities matching the filter function
      */
     get(pred: Predicate<T>): Readable<T[]>
 
     /**
-     * Removes the entity from the store, if found
+     * Removes the entity from the store, if found.
      *
      * @param id {ID} ID of the entity to remove
      */
     remove(id: ID): void
 
     /**
-     * Removes the given entities from the store, if found
+     * Removes the given entities from the store, if found.
      *
      * @param ids Array of IDs to remove from the store
      */
     remove(ids: ID[]): void
 
     /**
-     * Removes all entities that match the filter function
+     * Removes all entities that match the filter function.
      *
-     * @param pred filter function which returns true for each entity to be removed
+     * @param pred Filter function which returns true for each entity to be removed
      */
     remove(pred: Predicate<T>): void
 
     /**
-     * Removes all entities
+     * Removes all entities from the store.
      */
     reset(): void
 
@@ -89,19 +89,19 @@ export type EntityStore<T> = {
     set(entities: T | T[]): void
 
     /**
-     * See (Svelte's docs)[https://svelte.dev/docs#svelte_store] for details on the Store contract and `subscribe` function
+     * See (Svelte's docs)[https://svelte.dev/docs#svelte_store] for details on the Store contract and `subscribe` function.
      */
     subscribe: Subscribe<Normalized<T>>
 
     /**
-     * Runs every entity through the updater function and stores the new state
+     * Runs every entity through the updater function and stores the new state.
      *
      * @param updater Callback to update the entity
      */
     update(updater: Updater<T>): void
 
     /**
-     * If found, runs the entity through the updater function and stores the new state
+     * If found, runs the entity through the updater function and stores the new state.
      *
      * @param updater Callback to update the entity
      * @param id ID of the entity to update
@@ -109,7 +109,7 @@ export type EntityStore<T> = {
     update(updater: Updater<T>, id: ID): void
 
     /**
-     * Runs the matching entity through the updater function and stores the new state
+     * Runs the matching entity through the updater function and stores the new state.
      *
      * @param updater Callback to update each entity
      * @param ids IDs of the entities to update
@@ -117,7 +117,7 @@ export type EntityStore<T> = {
     update(updater: Updater<T>, ids: ID[]): void
 
     /**
-     * If found, runs the entity through the updater function and stores the new state
+     * If found, runs the entity through the updater function and stores the new state.
      *
      * @param updater Callback to update the entity
      * @param entity The entity to update
@@ -125,7 +125,7 @@ export type EntityStore<T> = {
     update(updater: Updater<T>, entity: T): void
 
     /**
-     * Runs each existing entity through the updater function and stores the new state
+     * Runs each existing entity through the updater function and stores the new state.
      *
      * @param updater Callback to update each entity
      * @param entities Array of the entities to update
@@ -133,7 +133,7 @@ export type EntityStore<T> = {
     update(updater: Updater<T>, entities: T[]): void
 
     /**
-     * Runs each matching entity through the updater function and stores the new state
+     * Runs each matching entity through the updater function and stores the new state.
      *
      * @param updater Callback to update each entity
      * @param pred Filter function that returns true for each entity to update
@@ -142,7 +142,7 @@ export type EntityStore<T> = {
 }
 
 /**
- * Creates a new entity store
+ * Creates a new entity store.
  *
  * @typeParam T Entity type being stored
  * @param getID Function that returns the ID of an entity
