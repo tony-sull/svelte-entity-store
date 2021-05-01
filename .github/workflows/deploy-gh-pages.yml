@@ -2,12 +2,7 @@
 # Using https://github.com/marketplace/actions/deploy-to-github-pages
 name: Deploy to Github pages
 
-on:
-  push:
-    tags:
-      - v*
-    # branches:
-    #   - master
+on: [push, pull_request]
 
 jobs:
   deploy_pages:
