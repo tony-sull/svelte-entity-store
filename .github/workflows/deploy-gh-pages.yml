@@ -1,25 +1,22 @@
-# https://github.com/actions/setup-node
-# Using https://github.com/marketplace/actions/deploy-to-github-pages
-name: Deploy to Github pages
-
-on: [push, pull_request]
-
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - main
 jobs:
-  deploy_pages:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2-beta
-      with:
-        node-version: '12'
-    - run: yarn install --frozen-lockfile
-    - run: yarn doc
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
 
-    - run: touch docs/.nojekyll
-    - name: Deploy docs 🚀
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: docs # The folder the action should deploy.
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
