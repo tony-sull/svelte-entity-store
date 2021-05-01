@@ -2,6 +2,11 @@ import type { Normalized } from './normalize'
 import type { ID, Predicate } from '..'
 
 /**
+ * Gets an array of all entities in the state
+ */
+export function getEntities<T>(): (state: Normalized<T>) => T[]
+
+/**
  * Finds an entity by ID
  *
  * @param id ID of the entity to find
@@ -25,9 +30,12 @@ export function getEntities<T>(ids: ID[]): (state: Normalized<T>) => T[]
  * @returns Array of entities matching the filter function
  */
 export function getEntities<T>(pred: Predicate<T>): (state: Normalized<T>) => T[]
-export function getEntities<T>(input: ID | ID[] | Predicate<T>) {
+
+export function getEntities<T>(input?: ID | ID[] | Predicate<T>) {
     return function (state: Normalized<T>): T | T[] {
-        if (Array.isArray(input)) {
+        if (!input) {
+            return state.allIds.map((id) => state.byId[id])
+        } else if (Array.isArray(input)) {
             return input.map((id) => state.byId[id]).filter(Boolean)
         } else if (input instanceof Function) {
             return state.allIds.map((id) => state.byId[id]).filter(input)

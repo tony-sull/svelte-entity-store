@@ -267,6 +267,20 @@ get('is a function', () => {
     assert.type(get, 'function')
 })
 
+get('accepts no params', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: true },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const { get } = entityStore<Entity>(getID, entities)
+
+    const $entities = get()
+    const state = svelteGet($entities)
+
+    assert.equal(state, entities)
+})
+
 get('accepts a single ID', () => {
     const { get } = entityStore<Entity>(getID)
     const $entity = get('abc')

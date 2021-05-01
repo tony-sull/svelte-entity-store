@@ -15,6 +15,21 @@ test('is a function', () => {
     assert.type(getEntities, 'function')
 })
 
+test('returns all entities if given no parameters', () => {
+    const state: Normalized<Entity> = {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: false },
+            def: { id: 'def', description: 'item 2', completed: true },
+            ghi: { id: 'ghi', description: 'item 3', completed: false },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    }
+
+    const result = getEntities<Entity>()(state)
+
+    assert.equal(result, [state.byId.abc, state.byId.def, state.byId.ghi])
+})
+
 test('accepts a single ID', () => {
     const state: Normalized<Entity> = {
         byId: {

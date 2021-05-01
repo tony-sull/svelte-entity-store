@@ -33,6 +33,13 @@ export type GetID<T> = (t: T) => ID
  */
 export type EntityStore<T> = {
     /**
+     * Gets a derived store containing every entity in the store.
+     *
+     * @returns Array of all entities
+     */
+    get(): Readable<T[]>
+
+    /**
      * Gets a derived store containing the entity if the ID is found, or undefined otherwise.
      *
      @param id ID of the entity to find
@@ -170,11 +177,14 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
         }
     }
 
+    function get(): Readable<T[]>
     function get(id: ID): Readable<T | undefined>
     function get(ids: ID[]): Readable<T[]>
     function get(pred: Predicate<T>): Readable<T[]>
-    function get(input: ID | ID[] | Predicate<T>): Readable<T | undefined> | Readable<T[]> {
-        if (Array.isArray(input)) {
+    function get(input?: ID | ID[] | Predicate<T>): Readable<T | undefined> | Readable<T[]> {
+        if (!input) {
+            return derived(store, getEntities<T>())
+        } else if (Array.isArray(input)) {
             return derived(store, getEntities<T>(input))
         } else if (input instanceof Function) {
             return derived(store, getEntities<T>(input))
