@@ -4,10 +4,9 @@
   "description": "Normalized entity store for Svelte projects",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "types": "types/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "scripts": {
     "doc": "typedoc --entryPoints src/index.ts",
