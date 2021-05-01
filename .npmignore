@@ -1,13 +1,10 @@
+/.github/
+/.vscode/
 /node_modules/
 /build/
-/lib/
-/dist/
-/dist-*/
-/docs/
 /tmp/
-/mnt/
-/package/
 .idea/*
+/docs/
 
 /coverage
 /coverage.*
@@ -16,3 +13,5 @@
 package-lock.json
 /*.tgz
 /tmp*
+/mnt/
+/package/
