@@ -1,0 +1,22 @@
+name: Code Coverage
+on:
+  workflow_run:
+    workflows: ["Build and Test"]
+    branches: [main]
+    types: [completed]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          npm install
+          npm run test:report
+
+      - name: Upload coverage to Codecov  
+        uses: codecov/codecov-action@v1
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
