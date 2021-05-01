@@ -28,13 +28,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tonyfsullivan/svelte-entity-store.git"
+    "url": "git+https://github.com/tony-sull/svelte-entity-store.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tonyfsullivan/svelte-entity-store/issues"
+    "url": "https://github.com/tony-sull/svelte-entity-store/issues"
   },
-  "homepage": "https://github.com/tonyfsullivan/svelte-entity-store#readme",
+  "homepage": "https://github.com/tony-sull/svelte-entity-store#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",

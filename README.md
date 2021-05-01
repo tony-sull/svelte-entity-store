@@ -2,11 +2,11 @@
   <a href="https://npmjs.org/package/svelte-entity-store">
     <img src="https://badgen.now.sh/npm/v/svelte-entity-store" alt="version" />
   </a>
-  <a href="https://github.com/lukeed/uvu/actions">
-    <img src="https://github.com/lukeed/uvu/workflows/CI/badge.svg" alt="CI" />
+  <a href="https://github.com/tony-sull/svelte-entity-store/actions">
+    <img src="https://github.com/tony-sull/svelte-entity-store/workflows/CI/badge.svg" alt="CI" />
   </a>
-  <a href="https://codecov.io/gh/tonyfsullivan/svelte-entity-store">
-    <img src="https://codecov.io/gh/tonyfsullivan/svelte-entity-store/branch/main/graph/badge.svg" alt="codecov">
+  <a href="https://codecov.io/gh/tony-sull/svelte-entity-store">
+    <img src="https://codecov.io/gh/tony-sull/svelte-entity-store/branch/main/graph/badge.svg" alt="codecov">
   </a>
 </div>
 
@@ -14,7 +14,7 @@
 
 A (**w**ork-**i**n-**p**rogress) generic entity store for Svelte projects.
 
-Check out the [full docs](https://tonyfsullivan.github.io/svelte-entity-store/) for details.
+Check out the [full docs](https://tony-sull.github.io/svelte-entity-store/) for details.
 
 ## Why?
 
