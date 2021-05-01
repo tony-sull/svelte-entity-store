@@ -8,6 +8,13 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "svelte",
+    "store",
+    "state",
+    "entity",
+    "reactive"
+  ],
   "scripts": {
     "doc": "typedoc",
     "lint": "eslint src/ --ext .ts",
