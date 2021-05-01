@@ -1,6 +1,6 @@
 import { getEntities } from './get-entities'
 import type { Normalized } from './normalize'
-import type { GetID, ID, Predicate } from '..'
+import type { GetID, ID, Predicate } from '../shared'
 
 export function removeEntities<T>(
     getId: GetID<T>,

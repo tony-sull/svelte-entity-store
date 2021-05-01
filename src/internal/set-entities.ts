@@ -1,5 +1,5 @@
 import type { Normalized } from './normalize'
-import type { GetID } from '..'
+import type { GetID } from '../shared'
 
 /**
  * Adds or updates the given entities to the normalized state. Entities already in the state or replaced, new entities are added.

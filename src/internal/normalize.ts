@@ -1,4 +1,4 @@
-import { GetID, ID } from '../'
+import { GetID, ID } from '../shared'
 
 /**
  * Normalized state tracking entities by ID

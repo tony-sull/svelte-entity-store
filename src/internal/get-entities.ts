@@ -1,5 +1,5 @@
 import type { Normalized } from './normalize'
-import type { ID, Predicate } from '..'
+import type { ID, Predicate } from '../shared'
 
 /**
  * Gets an array of all entities in the state

@@ -1,8 +1,8 @@
 import { getEntities } from './get-entities'
-import { isID } from '..'
+import { isID } from '../shared'
 import type { Updater } from 'svelte/store'
 import type { Normalized } from './normalize'
-import type { GetID, ID, Predicate } from '..'
+import type { GetID, ID, Predicate } from '../shared'
 
 export function updateEntities<T>(
     getId: GetID<T>,

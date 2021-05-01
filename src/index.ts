@@ -1,1 +1,1 @@
-export * from './entity-store'
+export { entityStore } from './entity-store'

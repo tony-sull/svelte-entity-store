@@ -4,29 +4,13 @@ import { normalize } from './internal/normalize'
 import { removeEntities } from './internal/remove-entities'
 import { setEntities } from './internal/set-entities'
 import { updateEntities } from './internal/update-entities'
+import { isID } from './shared'
 import type { Readable, Subscriber, Unsubscriber } from 'svelte/store'
 import type { Normalized } from './internal/normalize'
+import type { ID, GetID, Predicate } from './shared'
 
 declare type Invalidator<T> = (value?: T) => void
 declare type Subscribe<T> = (this: void, run: Subscriber<T>, invalidate?: Invalidator<T>) => Unsubscriber
-
-export type Predicate<T> = (t: T) => boolean
-
-/**
- * EntityStore supports `string` and `number` values for unique IDs
- */
-export type ID = string | number
-
-export function isID(value: unknown): value is ID {
-    const type = typeof value
-
-    return type === 'string' || type === 'number'
-}
-
-/**
- * Function used to get the unique ID of an entity
- */
-export type GetID<T> = (t: T) => ID
 
 /**
  * Simple Svelte store that normalized data by ID and provides helpers for common data access patterns.
