@@ -1,4 +1,7 @@
 <div align="center">
+  <a href="https://npmjs.org/package/svelte-entity-store">
+    <img src="https://badgen.now.sh/npm/v/svelte-entity-store" alt="version" />
+  </a>
   <a href="https://github.com/lukeed/uvu/actions">
     <img src="https://github.com/lukeed/uvu/workflows/CI/badge.svg" alt="CI" />
   </a>
