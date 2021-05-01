@@ -8,9 +8,11 @@
 
 A (**w**ork-**i**n-**p**rogress) generic entity store for Svelte projects.
 
+Check out the [full docs](https://tonyfsullivan.github.io/svelte-entity-store/) for details.
+
 ## Why?
 
-This is ultimately just a [custom store](https://svelte.dev/examples#custom-stores) built on top of (svelte/store)[https://svelte.dev/docs#svelte_store]. Like the rest of Svelte, the built in stores are excellent building blocks that aim to give you all the tools you need without trying to solve every single scenario out of the box.
+This is ultimately just a [custom store](https://svelte.dev/examples#custom-stores) built on top of [svelte/store](https://svelte.dev/docs#svelte_store). Like the rest of Svelte, the built in stores are excellent building blocks that aim to give you all the tools you need without trying to solve every single scenario out of the box.
 
 The goal with `svelte-entity-store` is to provide a simple, generic solution for storing collections of entity objects. Throwing an array of items into a basic `writeble` store doesn't scale well if you have a lot of items and need to quickly find or update one item in the store.
 
