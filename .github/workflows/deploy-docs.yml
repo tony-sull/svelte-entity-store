@@ -1,7 +1,7 @@
-name: Build and Deploy
+name: Deploy Docs
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["Build and Test"]
     branches: [main]
     types: [completed]
 jobs:
