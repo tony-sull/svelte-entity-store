@@ -506,6 +506,28 @@ update('is a function', () => {
     assert.type(update, 'function')
 })
 
+update('accepts no parameters', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.update(toggle)
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: true },
+            def: { id: 'def', description: 'item 2', completed: true },
+            ghi: { id: 'ghi', description: 'item 3', completed: true },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
 update('accepts a single ID', () => {
     const entities: Entity[] = [
         { id: 'abc', description: 'item 1', completed: false },

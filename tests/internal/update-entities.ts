@@ -19,6 +19,28 @@ test('is a function', () => {
     assert.type(updateEntities, 'function')
 })
 
+test('accepts no parameters', () => {
+    const state: Normalized<Entity> = {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: false },
+            def: { id: 'def', description: 'item 2', completed: false },
+            ghi: { id: 'ghi', description: 'item 3', completed: false },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    }
+
+    const result = updateEntitiesT(toggle)()(state)
+
+    assert.equal(result, {
+        byId: {
+            abc: { id: 'abc', description: 'item 1', completed: true },
+            def: { id: 'def', description: 'item 2', completed: true },
+            ghi: { id: 'ghi', description: 'item 3', completed: true },
+        },
+        allIds: ['abc', 'def', 'ghi'],
+    })
+})
+
 test('accepts a single ID', () => {
     const state: Normalized<Entity> = {
         byId: {

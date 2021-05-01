@@ -111,6 +111,13 @@ export type EntityStore<T> = {
     subscribe: Subscribe<Normalized<T>>
 
     /**
+     * Runs every entity through the updater function and stores the new state
+     *
+     * @param updater {@link Updater<T>} Callback to update the entity
+     */
+    update(updater: Updater<T>): void
+
+    /**
      * If found, runs the entity through the updater function and stores the new state
      *
      * @param updater {@link Updater<T>} Callback to update the entity
@@ -200,12 +207,13 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
         store.update(removeEntitiesT(input))
     }
 
+    function update(updater: Updater<T>): void
     function update(updater: Updater<T>, id: ID): void
     function update(updater: Updater<T>, ids: ID[]): void
     function update(updater: Updater<T>, entity: T): void
     function update(updater: Updater<T>, entiites: T[]): void
     function update(updater: Updater<T>, pred: Predicate<T>): void
-    function update(updater: Updater<T>, input: ID | ID[] | T | T[] | Predicate<T>): void {
+    function update(updater: Updater<T>, input?: ID | ID[] | T | T[] | Predicate<T>): void {
         store.update(updateEntitiesT(updater)(input))
     }
 
