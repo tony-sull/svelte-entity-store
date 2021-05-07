@@ -163,4 +163,4 @@ Works just like `update(updater, entities: T[])`, but for each item in the array
 
 #### update(updater: (entity: T) => T, pred: Predicate<T>)
 
-Runes every entity that matches the predicate through the `updater` callback.  The predicate works just like `Array.prototype.filter`, every entity is run through the predicate and if it returns **true** the entity is updated.
+Runs every entity that matches the predicate through the `updater` callback.  The predicate works just like `Array.prototype.filter`, every entity is run through the predicate and if it returns **true** the entity is updated.
