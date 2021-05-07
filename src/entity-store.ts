@@ -63,6 +63,20 @@ export type EntityStore<T> = {
     remove(ids: ID[]): void
 
     /**
+     * Removes an entity from the store, if found.
+     *
+     * @param entity The entity to remove
+     */
+    remove(entity: T): void
+
+    /**
+     * Removes multiple entities from the store, if found.
+     *
+     * @param entities Array of entities to remove
+     */
+    remove(entities: T[]): void
+
+    /**
      * Removes all entities that match the filter function.
      *
      * @param pred Filter function which returns true for each entity to be removed
@@ -184,8 +198,10 @@ export function entityStore<T>(getID: GetID<T>, initial: T[] = []): EntityStore<
 
     function remove(id: ID): void
     function remove(ids: ID[]): void
+    function remove(entity: T): void
+    function remove(entity: T[]): void
     function remove(pred: Predicate<T>): void
-    function remove(input: ID | ID[] | Predicate<T>): void {
+    function remove(input: ID | ID[] | T | T[] | Predicate<T>): void {
         store.update(removeEntitiesT(input))
     }
 
