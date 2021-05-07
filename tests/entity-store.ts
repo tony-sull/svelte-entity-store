@@ -440,6 +440,38 @@ remove('accepts an array of IDs', () => {
     })
 })
 
+remove('accepts a single entity', () => {
+    const entity: Entity = { id: 'abc', description: 'item 1', completed: false }
+    const store = entityStore<Entity>(getID, [entity])
+
+    store.remove(entity)
+
+    const state = svelteGet(store)
+
+    assert.equal(state, { byId: {}, allIds: [] })
+})
+
+remove('accepts an array of entities', () => {
+    const entities: Entity[] = [
+        { id: 'abc', description: 'item 1', completed: false },
+        { id: 'def', description: 'item 2', completed: false },
+        { id: 'ghi', description: 'item 3', completed: false },
+    ]
+    const store = entityStore<Entity>(getID, entities)
+
+    store.remove([entities[0]])
+
+    const state = svelteGet(store)
+
+    assert.equal(state, {
+        byId: {
+            def: entities[1],
+            ghi: entities[2],
+        },
+        allIds: ['def', 'ghi'],
+    })
+})
+
 remove('accepts a filter function', () => {
     const entities: Entity[] = [
         { id: 'abc', description: 'item 1', completed: true },
